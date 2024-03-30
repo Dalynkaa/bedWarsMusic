@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("xyz.jpenilla.run-paper") version "2.2.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "me.dalynkaa.bedwars"
@@ -43,10 +44,7 @@ subprojects {
         if (nexusUser!=null && nexusPassword!=null) {
             repositories.maven(url = uri(repoUrl)) {
                 name = "maven"
-                credentials {
-                    username = nexusUser.toString()
-                    password = nexusPassword.toString()
-                }
+                credentials(PasswordCredentials::class)
             }
         }
     }
@@ -58,6 +56,15 @@ dependencies {
 
 }
 tasks {
+    assemble {
+        dependsOn(shadowJar)
+    }
+
+    shadowJar {
+        archiveBaseName.set(rootProject.name)
+        archiveClassifier.set("")
+        dependsOn(":api:shadowJar")
+    }
     runServer {
         downloadPlugins {
             url("https://github.com/plasmoapp/plasmo-voice/releases/download/2.1.0-SNAPSHOT/PlasmoVoice-Paper-2.1.0+b0f5364-SNAPSHOT.jar")

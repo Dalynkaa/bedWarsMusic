@@ -6,6 +6,5 @@ import java.util.UUID;
 public interface IMusicManager {
 
     Integer getPluginVersion();
-    Integer getCoreVersion();
     String getPluginName();
 }
